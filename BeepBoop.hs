@@ -1,16 +1,20 @@
 module BeepBoop where
 
+
+-- HUN: Típus szinoníma: A bináris számokat egy Int lista reprezentálja
+-- ENG: Type synonym: Binary numbers are represented by an Int list
+type BinaryNum = [Int]
+
 -- HUN: Kódtábla
 -- ENG: Codetable
 ascii :: [(Char, Int)]
 ascii = zip ([' ','!',',','.','?'] ++ ['A'..'Z'] ++ ['a'..'z']) ([32,33,44,46,63] ++ [65..90] ++ [97..122])
 
-----------------------------------------
--- Encode part
+-- Encode part --------------------------------------------------
 
 -- HUN: Megkeresi a betűkhöz tartozó Ascii-kódokat
 -- ENG: Finds the Ascii code of each character in a String
-letterToNumber :: String -> [Int]
+letterToNumber :: String -> BinaryNum
 letterToNumber list = map numberCode list
     where
         numberCode :: Char -> Int
@@ -18,7 +22,7 @@ letterToNumber list = map numberCode list
 
 -- HUN: Az Ascii-kódot (decimális szám) átváltja bináris számra, amit egy Int lista reprezentál
 -- ENG: Converts the Ascii code (decimal number) to a binary number represented by an Int list
-toBinary :: Int -> [Int]
+toBinary :: Int -> BinaryNum
 toBinary 0 = [0]
 toBinary n = reverse (h n)
     where
@@ -28,7 +32,7 @@ toBinary n = reverse (h n)
 -- HUN: A bináris szám jegyeit Beep-re és Boop-ra cseréli
 -- ENG: It replaces the digits of the binary number with Beep and Boop
 -- Beep = 0; Boop = 1
-toBeeps :: [Int] -> [String]
+toBeeps :: BinaryNum -> [String]
 toBeeps [] = []
 toBeeps (0:xs) = "Beep" : toBeeps xs
 toBeeps (1:xs) = "Boop" : toBeeps xs
@@ -39,30 +43,30 @@ encode :: String -> [[String]]
 encode [] = [[]]
 encode list = map (toBeeps . toBinary) (letterToNumber list)
 
-----------------------------------------
--- Decode part
+
+-- Decode part --------------------------------------------------
 
 -- HUN: A Beep-eket és a Boop-okat 0-ra és 1-re cseréli
 -- ENG: It replaces the Beeps and the Boops with 0 and 1
 -- Beep = 0; Boop = 1
-beepsToBinary :: [String] -> [Int]
+beepsToBinary :: [String] -> BinaryNum
 beepsToBinary [] = []
 beepsToBinary ("Beep":xs) = 0 : beepsToBinary xs
 beepsToBinary ("Boop":xs) = 1 : beepsToBinary xs
 
 -- HUN: A bináris számot átváltja decimálisra
 -- ENG: Converts binary numbers to decimal numbers
-toDecimal :: [Int] -> Int
+toDecimal :: BinaryNum -> Int
 toDecimal list = h (reverse list) 0
     where
-        h :: [Int] -> Int -> Int
+        h :: BinaryNum -> Int -> Int
         h [] _ = 0
         h (1:xs) c = 2 ^ c + (h xs (c+1))
         h (_:xs) c = h xs (c+1)
-        
+
 -- HUN: Megkeresi a számhoz tartozó Ascii-kódot
 -- ENG: Finds the Ascii code for the number
-numberToLetter :: [Int] -> String
+numberToLetter :: BinaryNum -> String
 numberToLetter list = map letterCode list
     where
         letterCode :: Int -> Char
