@@ -9,3 +9,4 @@ Beginner programmer's random pojects in Haskell for practise.
 - Beep-boop encode and decode
 - RSA decoder
 - Kot-kodács encode and decode
+- EvenFiboNums
